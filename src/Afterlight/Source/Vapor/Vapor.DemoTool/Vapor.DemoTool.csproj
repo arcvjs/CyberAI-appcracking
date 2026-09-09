@@ -1,4 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
- <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net8.0-windows</TargetFramework><UseWPF>true</UseWPF><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><AssemblyName>Afterlight Demo</AssemblyName></PropertyGroup>
- <ItemGroup><EmbeddedResource Include="$(DemoPayload)/Vaporworks.dll" LogicalName="Replacement.dll"/><EmbeddedResource Include="$(DemoPayload)/manifest.json" LogicalName="Manifest.json"/></ItemGroup>
-</Project>

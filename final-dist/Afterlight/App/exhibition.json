@@ -1,7 +1,6 @@
 {
-  "edition": "Local exhibition",
+  "version": 2,
   "appId": 2937,
-  "serverUrl": "http://127.0.0.1:47838",
-  "version": 1,
-  "issuerId": "6AF6FBEDE73C893F"
+  "edition": "Local exhibition",
+  "serverUrl": "http://127.0.0.1:47838"
 }

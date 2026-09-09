@@ -18,7 +18,4 @@ See **final-dist/Afterlight/App/DRM-ARCHITECTURE.md** for the local mock licensi
 
 Re-run direct-launch checks with `pwsh -File src/Afterlight/Source/Vapor/Test-Bootstrap.ps1` from the repository root (close Vapor first). Generated previews and test reports are excluded from Git.
 
-Old Aurora/AfterlightDRM prototypes and build caches are preserved locally under `../.local-archive/Afterlight-prototypes/`, excluded from Git. Build-Exhibition generates its own signing keys and matching public trust files. Local accounts, private keys, and packages are never required in source control.
-
-For the SDK replacement demonstration, open **OPEN DEMO.cmd**. Read [the presenter guide](docs/Presenter-guide.md) for the short presentation script. The build also copies it into `Demo/`.
-
+For manual SDK replacement, read [the guide](docs/Presenter-guide.md). Use **final-dist/Afterlight/Play Afterlight.cmd** to launch the game. Copy the entire distribution to another Windows x64 PC. First launch generates the local demo state automatically; private keys are never bundled.

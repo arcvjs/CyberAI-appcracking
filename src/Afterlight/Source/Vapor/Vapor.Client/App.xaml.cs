@@ -19,6 +19,8 @@ public partial class App : Application
             try { using var timeout=new CancellationTokenSource(2500);using var pipe=new NamedPipeClientStream(".","vapor-ui-"+suffix,PipeDirection.Out,PipeOptions.Asynchronous|PipeOptions.CurrentUserOnly);await pipe.ConnectAsync(timeout.Token);await IpcWire.Write(pipe,e.Args.Contains("--launch"),timeout.Token); }catch{}
             Shutdown();return;
         }
+        try { await LocalService.InitializeAsync(); }
+        catch (Exception error) { MessageBox.Show(error.Message,"Afterlight setup",MessageBoxButton.OK,MessageBoxImage.Error); Shutdown(1); return; }
         var window=new Views.MainWindow();MainWindow=window;
         if(e.Args.Contains("--launch"))window.RequestLaunch();
         window.Show();

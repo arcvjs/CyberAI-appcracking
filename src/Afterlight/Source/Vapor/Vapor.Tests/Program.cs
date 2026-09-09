@@ -18,9 +18,21 @@ if(args.FirstOrDefault()=="--probe")
     File.WriteAllText(args[1],JsonSerializer.Serialize(new{decision.Ok,decision.Code},VaporProtocol.Json));
     return 0;
 }
-string root=Path.GetFullPath(args.FirstOrDefault()??throw new ArgumentException("Pass the exhibition package path"));
+string sourceRoot=Path.GetFullPath(args.FirstOrDefault()??throw new ArgumentException("Pass the exhibition package path"));
+string root=Path.Combine(Path.GetTempPath(),"afterlight-test-package-"+Guid.NewGuid().ToString("N"));
+foreach(string file in Directory.EnumerateFiles(sourceRoot,"*",SearchOption.AllDirectories)) { string target=Path.Combine(root,Path.GetRelativePath(sourceRoot,file));Directory.CreateDirectory(Path.GetDirectoryName(target)!);File.Copy(file,target); }
 string data=Path.Combine(Path.GetTempPath(),"afterlight-integration-"+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(data);
-foreach(var source in Directory.GetFiles(Path.Combine(root,"Presenter","seed-data")))File.Copy(source,Path.Combine(data,Path.GetFileName(source)));
+var initialize=new ProcessStartInfo(Path.Combine(root,"Service","Vapor.Backend.exe")){UseShellExecute=false,CreateNoWindow=true};
+initialize.ArgumentList.Add("--initialize");
+initialize.Environment["VAPOR_DATA"]=data;
+initialize.Environment["VAPOR_URL"]="http://127.0.0.1:47838";
+using(var setup=Process.Start(initialize)!){await setup.WaitForExitAsync();if(setup.ExitCode!=0)throw new Exception("Test service setup failed");}
+File.WriteAllText(Path.Combine(AppContext.BaseDirectory,"exhibition.json"),"{}");
+Directory.CreateDirectory(ExhibitionState.DirectoryPath);
+foreach(var name in new[]{"client-trust.json","vaporworks-trust.json"})File.Copy(Path.Combine(data,name),Path.Combine(ExhibitionState.DirectoryPath,name),true);
+string gameData=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Vapor","Exhibition",VaporProtocol.Hash((root+Path.DirectorySeparatorChar).ToUpperInvariant())[..16],"service-data");
+Directory.CreateDirectory(gameData);
+File.Copy(Path.Combine(data,"vaporworks-trust.json"),Path.Combine(gameData,"vaporworks-trust.json"),true);
 using var manifest=JsonDocument.Parse(File.ReadAllText(Path.Combine(root,"exhibition.json")));
 string url=manifest.RootElement.GetProperty("serverUrl").GetString()!;
 using var http=new HttpClient{BaseAddress=new Uri(url),Timeout=TimeSpan.FromSeconds(3)};

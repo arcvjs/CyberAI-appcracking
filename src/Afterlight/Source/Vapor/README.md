@@ -44,12 +44,11 @@ Requirements: 64-bit Windows 10/11, an OpenGL 3.3 capable graphics driver, keybo
 - `Vaporworks.dll`: inspectable game SDK and ownership gate.
 - `Vapor.Licensing.dll`: protocol and cryptographic verification.
 - `Service/`: the separate local reference backend.
-- `Presenter/seed-data/`: isolated demo accounts and issuer material for the presenter service. This folder is not a production game distribution.
-- `exhibition.json`: installation metadata, local service address, and issuer ID.
+- `exhibition.json`: installation metadata and local service address. First launch generates keys and an expired demo account in LocalAppData; no private seed files are distributed.
 
 Vapor caches the last signed ownership ticket using Windows DPAPI. An owned game can start with a valid cached ticket when the local backend is stopped, as long as the launcher is running. The demo's offline ticket lease is seven days. Revocation cannot be learned while the issuer is unavailable; an existing cached license remains usable until its lease expires. The default expired trial never becomes playable merely by disconnecting.
 
-Save data is under `%LOCALAPPDATA%\Afterlight`. The launcher stores its account cache and service state beneath `%LOCALAPPDATA%\Vapor`, separated by the signing authority's ID. Source builds and published exhibition builds have separate authorities.
+Save data is under `%LOCALAPPDATA%\Afterlight`. The launcher stores its account cache and service state beneath `%LOCALAPPDATA%\Vapor`. Local service state is separated by package location; each new location gets its own authority. Close other Vapor instances before starting a different copy, since the service uses port 47838.
 
 ## Build from source
 

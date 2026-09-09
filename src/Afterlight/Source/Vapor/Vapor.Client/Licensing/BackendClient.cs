@@ -19,7 +19,7 @@ public sealed class BackendClient : IDisposable
     private bool _online=true;
     public BackendClient()
     {
-        using var stream=Assembly.GetExecutingAssembly().GetManifestResourceStream("Vapor.ClientTrust.json")??throw new InvalidOperationException("This build has no backend trust configuration.");
+        using var stream=ExhibitionState.Enabled ? File.OpenRead(Path.Combine(ExhibitionState.DirectoryPath,"client-trust.json")) : Assembly.GetExecutingAssembly().GetManifestResourceStream("Vapor.ClientTrust.json")??throw new InvalidOperationException("This build has no backend trust configuration.");
         Trust=JsonSerializer.Deserialize<BackendTrust>(stream,VaporProtocol.Json)??throw new InvalidDataException("Invalid backend trust configuration.");
         if(!Uri.TryCreate(Trust.ServerUrl,UriKind.Absolute,out var endpoint)||(endpoint.Scheme!="https"&&!(endpoint.Scheme=="http"&&endpoint.IsLoopback)))throw new InvalidOperationException("The backend requires HTTPS; HTTP is supported only on loopback.");
         _http=new HttpClient(new HttpClientHandler{AllowAutoRedirect=false}){BaseAddress=new Uri(Trust.ServerUrl.TrimEnd('/')+"/"),Timeout=TimeSpan.FromSeconds(8)};

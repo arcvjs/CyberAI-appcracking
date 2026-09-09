@@ -1,22 +1,15 @@
-# SDK replacement demonstration
+# Manual SDK replacement
 
-Open **OPEN DEMO.cmd** in the main folder. Everything runs offline.
+1. Close Afterlight and Vapor.
+2. Back up `App/Vaporworks.dll` in a separate folder.
+3. Copy `SDK/Vaporworks.dll` over `App/Vaporworks.dll` using File Explorer.
+4. Double-click **Play Afterlight.cmd**.
+5. Close the game and restore the original DLL to return to license checking.
 
-1. Click **Launch game** while the tool says **Protected**. Vapor opens; click Play to show the expired trial. If the account was previously activated, use `final-dist/Afterlight/App/Presenter/DemoControl.exe expired` before presenting.
-2. Close Vapor and Afterlight. Click **Apply replacement**. The tool backs up and verifies the original SDK, then replaces only `final-dist/Afterlight/App/Vaporworks.dll`.
-3. Click **Launch game** again. Afterlight opens directly. Enter the arena and play briefly.
-4. Close Afterlight. Click **Restore protection**, then **Launch game**. The original launcher flow returns.
+The replacement affects only the included Afterlight app. The game executable stays unchanged.
 
-Suggested narration: “The game asks a separate component whether play is allowed. We replaced that component with one that answers locally. The game executable did not change, and we did not create a valid signed license.”
+## Moving to another PC
 
-The account license is not altered by Apply or Restore. The expired-trial state remains in the service. Backups are stored in `final-dist/Afterlight/App/.sdk-backup/`. The tool rejects unknown game/SDK builds and damaged backups. Close the game and launcher before changing files.
+Copy the entire Afterlight distribution, including App, Service (inside App), SDK, and the launch shortcuts. The first Vapor launch generates local keys and an expired demo account under the current user's LocalAppData/Vapor/Exhibition folder. No private seed files need to be transferred.
 
-## Manual replacement
-
-The presenter automates a reversible file replacement. To demonstrate the same original project manually, close Vapor and Afterlight, build `Vapor.Emulator/Vapor.Emulator.csproj`, and copy its `Vaporworks.dll` into `final-dist/Afterlight/App/` only after saving the original as `.sdk-backup/Vaporworks.dll`. Compare SHA-256 hashes before and after the copy. Launch `Afterlight.exe` directly while the replacement is present. Restore the backup with the game and launcher closed, then compare its hash to the original backup. For a prebuilt replacement and File Explorer steps, see section 4 of the root README.
-
-This tool implements an original Afterlight-specific API replacement. It does not run SteamAutoCracker, Steamless, or any third-party emulator. It does not unpack executables or modify Steam games.
-
-Build: `Source/Vapor/Build-Demo.ps1` after building the protected app. The standard `Build-Exhibition.ps1` also rebuilds this tool. The replacement is embedded inside the presenter executable; it is not installed until Apply is selected.
-
-Checks: the presenter accepts `--self-test <absolute-report-path>` for an isolated copy test. It checks native startup and renewal, backup integrity, repeated Apply/Restore, unknown SDK rejection, and unchanged game bytes.
+With the original SDK, open the library and use the simulated checkout to enable play. The checkout takes no payment. If startup fails, fully extract the package and check whether Windows or antivirus blocked App/Service/Vapor.Backend.exe. The local service uses port 47838; close any other Vapor instance first.

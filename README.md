@@ -65,7 +65,7 @@ In the verified build, the gate is at file offset `0xF80` and begins `75 16`. Ch
 
 ### 4. Afterlight — replace the verifier SDK manually
 
-This is a file-level exercise for the source-owned lab package. Work on a disposable copy; this walkthrough does not require launching the demo app or presenter.
+Close Vapor and Afterlight before replacing files. Work on a copy of the included Afterlight folder.
 
 Choose the SDK you want to install:
 
@@ -76,7 +76,7 @@ In File Explorer, copy the original `final-dist/Afterlight/App/Vaporworks.dll` t
 
 ![Replacement SDK source](src/Exhibition-Deck/assets/screenshots/afterlight-sdk.png)
 
-The optional presenter automates the same backup, hash, replacement, and restore checks. This is an original Afterlight-specific API replacement for the lab build; it does not forge a signature or modify a commercial game. See [the presenter guide](src/Afterlight/docs/Presenter-guide.md).
+Double-click **Play Afterlight.cmd** to run the game after replacing the DLL. Restore the original DLL to return to the Vapor license check.
 
 ## Source map
 
@@ -91,12 +91,14 @@ The screenshots in this README are the project owner's supplied demo captures, c
 
 On Windows, install the .NET 8 SDK, PowerShell 7, Python 3, and MinGW-w64 GCC. From the repository root, run `pwsh -File src/scripts/Build.ps1` to rebuild the packages in `final-dist/`.
 
+Copy or extract the entire `final-dist/Afterlight/` folder on the other Windows x64 PC. Double-click **Play Afterlight.cmd**; the original SDK opens Vapor, while the replacement SDK enters the game directly. First launch creates local demo keys and account state automatically. Keep `App/Service/` with the game. No .NET installation is needed for Afterlight.
+
 The release folder contains:
 
 - `final-dist/Prism/Prism.exe` — the image editor demo.
 - `final-dist/Folio/PatchMe.exe` — the Folio document converter.
 - `final-dist/Afterlight/START HERE.cmd` — the protected Vapor launcher.
-- `final-dist/Afterlight/OPEN DEMO.cmd` — the reversible SDK replacement presenter.
+- `final-dist/Afterlight/Play Afterlight.cmd` — launch the game.
 - `final-dist/Afterlight/SDK/Vaporworks.dll` — the prebuilt lab SDK used in the manual replacement exercise.
 - `final-dist/Presentation/App-Cracking-12-Slides.pptx` — the short exhibition deck.
 

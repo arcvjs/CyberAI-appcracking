@@ -26,7 +26,7 @@ public static class VaporAPI
         get
         {
             if(trust != null) return trust;
-            using var stream = typeof(VaporAPI).Assembly.GetManifestResourceStream("Vaporworks.Trust.json")!;
+            using var stream = ExhibitionState.Enabled ? File.OpenRead(Path.Combine(ExhibitionState.DirectoryPath,"vaporworks-trust.json")) : typeof(VaporAPI).Assembly.GetManifestResourceStream("Vaporworks.Trust.json")!;
             return trust = JsonSerializer.Deserialize<WorksTrust>(stream,VaporProtocol.Json)!;
         }
     }

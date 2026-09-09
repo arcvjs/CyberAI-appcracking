@@ -12,7 +12,7 @@ try
     using var manifest=JsonDocument.Parse(File.ReadAllText(Path.Combine(root,"exhibition.json")));
     string url=manifest.RootElement.GetProperty("serverUrl").GetString()!;
     if(!new Uri(url).IsLoopback)throw new InvalidOperationException("Presenter controls require the local demo service.");
-    string issuer=manifest.RootElement.GetProperty("issuerId").GetString()!;
+    string issuer=VaporProtocol.Hash((root+Path.DirectorySeparatorChar).ToUpperInvariant())[..16];
     string data=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Vapor","Exhibition",issuer,"service-data");
     using var http=new HttpClient{BaseAddress=new Uri(url),Timeout=TimeSpan.FromSeconds(3)};
     bool ready=false;try{ready=(await http.GetAsync("/health")).IsSuccessStatusCode;}catch(HttpRequestException){}
