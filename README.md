@@ -76,7 +76,7 @@ In File Explorer, copy the original `final-dist/Afterlight/App/Vaporworks.dll` t
 
 ![Replacement SDK source](src/Exhibition-Deck/assets/screenshots/afterlight-sdk.png)
 
-Double-click **Play Afterlight.cmd** to run the game after replacing the DLL. Restore the original DLL to return to the Vapor license check.
+Double-click **Play Afterlight.cmd** to run the game after replacing the DLL. Restore the original DLL to return to the Vapor license check. [Manual replacement guide](final-dist/Afterlight/Manual-DLL-replacement.md).
 
 ## Source map
 

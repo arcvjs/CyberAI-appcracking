@@ -4,21 +4,9 @@ Double-click **Vapor.exe**. The local exhibition service starts in the backgroun
 
 Vapor is an original mock launcher. Purchases are simulations and never collect payment. The game, launcher, protocol, and backend were created for this exhibition.
 
-## Presenter controls
+## Manual DLL replacement
 
-From the `Presenter` folder:
-
-```text
-DemoControl.exe expired       Restore the expired-trial exhibit
-DemoControl.exe owned         Grant the demo account a full license
-DemoControl.exe trial 2       Start a two-minute trial
-DemoControl.exe revoke        Revoke the demo license
-DemoControl.exe status        Inspect the demo license
-```
-
-Click **LIBRARY** to refresh after a change. An open game renews its license every 20 seconds; a timed trial also expires locally while paused or in menus. Resetting a trial keeps the saved gameplay score. The simulated checkout's **Get full game** button also grants ownership.
-
-The reset tool changes only this mock game's local service. It does not modify Steam, another game, the Windows clock, antivirus, or Windows settings.
+Close the game and Vapor, back up `Vaporworks.dll`, then copy `../SDK/Vaporworks.dll` over it using File Explorer. Launch **Play Afterlight.cmd** in the parent folder. Restore the backup to return to license checking. See `Manual-DLL-replacement.md` in the distribution.
 
 ## Play
 
@@ -52,7 +40,7 @@ Save data is under `%LOCALAPPDATA%\Afterlight`. The launcher stores its account 
 
 ## Build from source
 
-Run `Build-Exhibition.ps1` from PowerShell 7 with the .NET 8 or later SDK installed. The script publishes the game, launcher, backend, and presenter controls to `../../App`. Package builds explicitly disable internal diagnostics.
+Run `Build-Exhibition.ps1` from PowerShell 7 with the .NET 8 or later SDK installed. The script publishes the game, launcher, backend, and replacement SDK to `final-dist/Afterlight/`. Package builds explicitly disable internal diagnostics.
 
 For development checks, build `../Afterlight/Afterlight.csproj -c Release -p:EnableDiagnostics=true` and run its executable with `--self-test`, `--drm-test`, or `--verify`. These diagnostic dispatch paths are excluded from the exhibition build. `--verify` produces screenshots, not a playable release mode.
 

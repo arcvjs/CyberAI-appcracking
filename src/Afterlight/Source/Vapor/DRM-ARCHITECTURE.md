@@ -55,7 +55,7 @@ IPC is restricted to the current Windows user, capped at 64 KiB, and timed out. 
 
 ## Exhibition threat model
 
-The attacker in this exhibit controls a copy of their own local game files. They can inspect .NET assemblies, replace a DLL, patch a branch, record IPC, edit caches, or change the system clock. They do not begin with access to the conceptual platform signing authority. In the physical exhibition bundle, presenter service data is provided separately so the host can run the whole example without internet. That is a teaching convenience, not a remote trust boundary.
+The attacker in this exhibit controls a copy of their own local game files. They can inspect .NET assemblies, replace a DLL, patch a branch, record IPC, edit caches, or change the system clock. They do not begin with access to the conceptual platform signing authority. On first launch, the local service generates its own keys and account state so the example runs without internet. That is a teaching convenience, not a remote trust boundary.
 
 | Experiment on this authored game | Expected result |
 |---|---|
@@ -70,7 +70,7 @@ The attacker in this exhibit controls a copy of their own local game files. They
 | Let a trial end while paused | License gate, rather than an indefinitely paused trial |
 | Patch the executable's decision logic or replace the SDK | A sufficiently modified local game can bypass client enforcement |
 
-The final row is the core exhibition lesson. Cryptography prevents forging an accepted signed claim; it cannot compel an attacker-controlled executable to execute its verification code. The separately distributed `Vaporworks.dll`, `VaporAPI.InitAsync`, `VaporSession.TicketStillValid`, and the bootstrap in `Afterlight/Program.cs` provide inspectable boundaries for discussion or authorized modification of this game. Presenter `owned` mode is legitimate issuance and should be described as activation, rather than demonstrated as a crack.
+The final row is the core exhibition lesson. Cryptography prevents forging an accepted signed claim; it cannot compel an attacker-controlled executable to execute its verification code. The separately distributed `Vaporworks.dll`, `VaporAPI.InitAsync`, `VaporSession.TicketStillValid`, and the bootstrap in `Afterlight/Program.cs` provide inspectable boundaries for discussion or authorized modification of this game. The walkthrough demonstrates manual DLL replacement.
 
 ## Deliberate limits
 
@@ -79,7 +79,7 @@ The final row is the core exhibition lesson. Cryptography prevents forging an ac
 - A fully offline computer provides no independently trusted calendar time. In-session rollback resistance and signed expiry limit casual manipulation; cross-restart clock/state rollback remains a limitation.
 - Offline revocation is bounded by the cached lease. The seven-day lease and 20-second renewal are **our demo policies**, not claims about Steam's universal policy.
 - Trial dates and licensing are publisher-defined in this demo. Its purchase API performs a simulated grant and does not process payments.
-- The local mock account/password mechanism and presenter issuer files are for the exhibition. A production platform would put its issuer, secrets, commerce, account controls and recovery processes on separately administered infrastructure.
+- The local mock account/password mechanism and locally generated issuer files are for the exhibition. A production platform would put its issuer, secrets, commerce, account controls and recovery processes on separately administered infrastructure.
 - Diagnostic entry points that skip licensing are compiled only with `EnableDiagnostics=true`. Published builds set it to false. An arbitrary `--verify` or `--showcase` argument grants no release entitlement.
 
 ## Verification
