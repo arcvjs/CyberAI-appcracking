@@ -11,29 +11,6 @@ The repository is intentionally split into two top-level folders:
 
 `final-dist/` contains the current release packages so the demo can be run immediately. Build it again from source with the command below whenever the applications change.
 
-## Quick start
-
-On Windows, install .NET 8 SDK, PowerShell 7, Python 3, and MinGW-w64 GCC. From the repository root:
-
-```powershell
-pwsh -File src/scripts/Build.ps1
-```
-
-The packages appear in `final-dist/`:
-
-- `final-dist/Prism/Prism.exe` — the image editor demo.
-- `final-dist/Folio/PatchMe.exe` — the Folio document converter.
-- `final-dist/Afterlight/START HERE.cmd` — the protected Vapor launcher.
-- `final-dist/Afterlight/OPEN DEMO.cmd` — the reversible SDK replacement presenter.
-- `final-dist/Presentation/App-Cracking-12-Slides.pptx` — the short exhibition deck.
-
-Before running the integration suite, close Vapor and Afterlight and restore the original SDK in the presenter. Then run:
-
-```powershell
-pwsh -File src/scripts/Test.ps1
-python src/scripts/check_repo.py
-```
-
 ## The four demos
 
 ### 1. Prism — extend the local trial date
@@ -88,42 +65,14 @@ In the verified build, the gate is at file offset `0xF80` and begins `75 16`. Ch
 
 ### 4. Afterlight — replace the verifier SDK manually
 
-This section is a file-level exercise for the source-owned Afterlight lab build. It does not require launching the demo app or presenter: build the replacement SDK, swap one DLL in a disposable copy, verify the hashes, and restore the original.
+This is a file-level exercise for the source-owned lab package. Work on a disposable copy; this walkthrough does not require launching the demo app or presenter.
 
-1. Build the replacement SDK from source into a temporary directory:
+Choose the SDK you want to install:
 
-```powershell
-$payload = Join-Path $env:TEMP ("afterlight-emulator-" + [guid]::NewGuid().ToString("N"))
-New-Item -ItemType Directory -Force -Path $payload | Out-Null
-dotnet build src/Afterlight/Source/Vapor/Vapor.Emulator/Vapor.Emulator.csproj -c Release -o $payload
-```
+- **Prebuilt:** use [`final-dist/Afterlight/SDK/Vaporworks.dll`](final-dist/Afterlight/SDK/Vaporworks.dll).
+- **From source:** build `src/Afterlight/Source/Vapor/Vapor.Emulator/Vapor.Emulator.csproj` in Release mode and use its `Vaporworks.dll` output.
 
-2. Point the exercise at a disposable copy of the lab package, then back up and verify its original SDK. Run this from the repository root:
-
-```powershell
-$app = (Resolve-Path final-dist/Afterlight/App).Path
-$sdk = Join-Path $app 'Vaporworks.dll'
-$backup = Join-Path $app '.sdk-backup/Vaporworks.dll'
-New-Item -ItemType Directory -Force -Path (Split-Path $backup) | Out-Null
-if (-not (Test-Path -LiteralPath $backup)) { Copy-Item -LiteralPath $sdk -Destination $backup }
-$originalHash = (Get-FileHash -LiteralPath $backup).Hash
-if ((Get-FileHash -LiteralPath $sdk).Hash -ne $originalHash) { throw 'The installed SDK is not the protected original.' }
-```
-
-3. Replace only `Vaporworks.dll`, then verify the replacement hash. This changes the lab package on disk; no executable is started by this workflow:
-
-```powershell
-$replacement = Join-Path $payload 'Vaporworks.dll'
-Copy-Item -LiteralPath $replacement -Destination $sdk -Force
-if ((Get-FileHash -LiteralPath $sdk).Hash -ne (Get-FileHash -LiteralPath $replacement).Hash) { throw 'Replacement verification failed.' }
-```
-
-Record the before/after hashes if you are presenting the file replacement. The game executable remains unchanged. To restore the protected SDK, run:
-
-```powershell
-Copy-Item -LiteralPath $backup -Destination $sdk -Force
-if ((Get-FileHash -LiteralPath $sdk).Hash -ne $originalHash) { throw 'Restore verification failed.' }
-```
+In File Explorer, copy the original `final-dist/Afterlight/App/Vaporworks.dll` to `App/.sdk-backup/Vaporworks.dll`, then copy the chosen SDK over `App/Vaporworks.dll`. Keep the original and replacement in separate folders. If you want a recorded check, compare their SHA-256 values with any trusted file-hash tool. Restore the original by copying the backup back over `App/Vaporworks.dll`.
 
 ![Replacement SDK source](src/Exhibition-Deck/assets/screenshots/afterlight-sdk.png)
 
@@ -137,3 +86,18 @@ The optional presenter automates the same backup, hash, replacement, and restore
 - [Exhibition deck](src/Exhibition-Deck/README.md) — screenshots, deck source, and Canva status.
 
 The screenshots in this README are the project owner's supplied demo captures, copied into `src/Exhibition-Deck/assets/screenshots/` so the deck no longer depends on a Windows Temp folder.
+
+## Quick start
+
+On Windows, install the .NET 8 SDK, PowerShell 7, Python 3, and MinGW-w64 GCC. From the repository root, run `pwsh -File src/scripts/Build.ps1` to rebuild the packages in `final-dist/`.
+
+The release folder contains:
+
+- `final-dist/Prism/Prism.exe` — the image editor demo.
+- `final-dist/Folio/PatchMe.exe` — the Folio document converter.
+- `final-dist/Afterlight/START HERE.cmd` — the protected Vapor launcher.
+- `final-dist/Afterlight/OPEN DEMO.cmd` — the reversible SDK replacement presenter.
+- `final-dist/Afterlight/SDK/Vaporworks.dll` — the prebuilt lab SDK used in the manual replacement exercise.
+- `final-dist/Presentation/App-Cracking-12-Slides.pptx` — the short exhibition deck.
+
+For validation, run `pwsh -File src/scripts/Test.ps1` followed by `python src/scripts/check_repo.py`.
