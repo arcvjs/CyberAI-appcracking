@@ -88,9 +88,9 @@ In the verified build, the gate is at file offset `0xF80` and begins `75 16`. Ch
 
 ### 4. Afterlight — replace the verifier SDK manually
 
-Run `final-dist/Afterlight/START HERE.cmd` first. The protected build opens the Vapor library and shows the expired trial. The manual path below performs the same original-project demonstration without the presenter UI.
+This section is a file-level exercise for the source-owned Afterlight lab build. It does not require launching the demo app or presenter: build the replacement SDK, swap one DLL in a disposable copy, verify the hashes, and restore the original.
 
-1. Close Vapor and Afterlight. Build the replacement SDK from source into a temporary directory:
+1. Build the replacement SDK from source into a temporary directory:
 
 ```powershell
 $payload = Join-Path $env:TEMP ("afterlight-emulator-" + [guid]::NewGuid().ToString("N"))
@@ -98,7 +98,7 @@ New-Item -ItemType Directory -Force -Path $payload | Out-Null
 dotnet build src/Afterlight/Source/Vapor/Vapor.Emulator/Vapor.Emulator.csproj -c Release -o $payload
 ```
 
-2. Back up and verify the protected SDK. Run this from the repository root:
+2. Point the exercise at a disposable copy of the lab package, then back up and verify its original SDK. Run this from the repository root:
 
 ```powershell
 $app = (Resolve-Path final-dist/Afterlight/App).Path
@@ -110,31 +110,24 @@ $originalHash = (Get-FileHash -LiteralPath $backup).Hash
 if ((Get-FileHash -LiteralPath $sdk).Hash -ne $originalHash) { throw 'The installed SDK is not the protected original.' }
 ```
 
-3. Replace only `Vaporworks.dll`, then verify the replacement hash:
+3. Replace only `Vaporworks.dll`, then verify the replacement hash. This changes the lab package on disk; no executable is started by this workflow:
 
 ```powershell
 $replacement = Join-Path $payload 'Vaporworks.dll'
 Copy-Item -LiteralPath $replacement -Destination $sdk -Force
 if ((Get-FileHash -LiteralPath $sdk).Hash -ne (Get-FileHash -LiteralPath $replacement).Hash) { throw 'Replacement verification failed.' }
-Start-Process -FilePath (Join-Path $app 'Afterlight.exe') -WorkingDirectory $app
 ```
 
-The replacement SDK returns an owned local session, so the game can start directly. The game executable remains unchanged. To restore protection, close the game and run:
+Record the before/after hashes if you are presenting the file replacement. The game executable remains unchanged. To restore the protected SDK, run:
 
 ```powershell
 Copy-Item -LiteralPath $backup -Destination $sdk -Force
 if ((Get-FileHash -LiteralPath $sdk).Hash -ne $originalHash) { throw 'Restore verification failed.' }
 ```
 
-![Afterlight trial ended](src/Exhibition-Deck/assets/screenshots/afterlight-trial.png)
-
-![Afterlight trial ended](src/Exhibition-Deck/assets/screenshots/afterlight-trial.png)
-
 ![Replacement SDK source](src/Exhibition-Deck/assets/screenshots/afterlight-sdk.png)
 
-![Afterlight gameplay](src/Exhibition-Deck/assets/screenshots/afterlight-gameplay.png)
-
-The same checks are available in the optional presenter, which refuses unknown builds, keeps a backup, and restores the original DLL byte-for-byte. This is an original Afterlight-specific API replacement; it does not forge an ECDSA signature or modify a commercial game. See [the presenter guide](src/Afterlight/docs/Presenter-guide.md).
+The optional presenter automates the same backup, hash, replacement, and restore checks. This is an original Afterlight-specific API replacement for the lab build; it does not forge a signature or modify a commercial game. See [the presenter guide](src/Afterlight/docs/Presenter-guide.md).
 
 ## Source map
 
