@@ -9,7 +9,7 @@ The repository is intentionally split into two top-level folders:
 | `src/` | Source code, tests, documentation, screenshots, and build scripts |
 | `final-dist/` | Local release packages produced from the source |
 
-`final-dist/` is ignored by Git because the self-contained Afterlight package is large and contains generated demo state. Build it locally with the command below before presenting.
+`final-dist/` contains the current release packages so the demo can be run immediately. Build it again from source with the command below whenever the applications change.
 
 ## Quick start
 
@@ -86,14 +86,47 @@ In the verified build, the gate is at file offset `0xF80` and begins `75 16`. Ch
 
 `75 -> 74` inverts the check for the supplied build. `75 -> EB` is the unconditional-allow variant. Offsets are build-specific, so derive the current site instead of guessing.
 
-### 4. Afterlight — replace the verifier SDK
+### 4. Afterlight — replace the verifier SDK manually
 
-Run `final-dist/Afterlight/START HERE.cmd`. The protected build opens the Vapor library and shows the expired trial. Close the game and launcher, then run `final-dist/Afterlight/OPEN DEMO.cmd`.
+Run `final-dist/Afterlight/START HERE.cmd` first. The protected build opens the Vapor library and shows the expired trial. The manual path below performs the same original-project demonstration without the presenter UI.
 
-1. Click **Apply replacement**.
-2. Launch the game from the presenter.
-3. Play briefly to show that the game executable is unchanged while the replacement `Vaporworks.dll` answers locally with an owned session.
-4. Close the game and click **Restore protection**.
+1. Close Vapor and Afterlight. Build the replacement SDK from source into a temporary directory:
+
+```powershell
+$payload = Join-Path $env:TEMP ("afterlight-emulator-" + [guid]::NewGuid().ToString("N"))
+New-Item -ItemType Directory -Force -Path $payload | Out-Null
+dotnet build src/Afterlight/Source/Vapor/Vapor.Emulator/Vapor.Emulator.csproj -c Release -o $payload
+```
+
+2. Back up and verify the protected SDK. Run this from the repository root:
+
+```powershell
+$app = (Resolve-Path final-dist/Afterlight/App).Path
+$sdk = Join-Path $app 'Vaporworks.dll'
+$backup = Join-Path $app '.sdk-backup/Vaporworks.dll'
+New-Item -ItemType Directory -Force -Path (Split-Path $backup) | Out-Null
+if (-not (Test-Path -LiteralPath $backup)) { Copy-Item -LiteralPath $sdk -Destination $backup }
+$originalHash = (Get-FileHash -LiteralPath $backup).Hash
+if ((Get-FileHash -LiteralPath $sdk).Hash -ne $originalHash) { throw 'The installed SDK is not the protected original.' }
+```
+
+3. Replace only `Vaporworks.dll`, then verify the replacement hash:
+
+```powershell
+$replacement = Join-Path $payload 'Vaporworks.dll'
+Copy-Item -LiteralPath $replacement -Destination $sdk -Force
+if ((Get-FileHash -LiteralPath $sdk).Hash -ne (Get-FileHash -LiteralPath $replacement).Hash) { throw 'Replacement verification failed.' }
+Start-Process -FilePath (Join-Path $app 'Afterlight.exe') -WorkingDirectory $app
+```
+
+The replacement SDK returns an owned local session, so the game can start directly. The game executable remains unchanged. To restore protection, close the game and run:
+
+```powershell
+Copy-Item -LiteralPath $backup -Destination $sdk -Force
+if ((Get-FileHash -LiteralPath $sdk).Hash -ne $originalHash) { throw 'Restore verification failed.' }
+```
+
+![Afterlight trial ended](src/Exhibition-Deck/assets/screenshots/afterlight-trial.png)
 
 ![Afterlight trial ended](src/Exhibition-Deck/assets/screenshots/afterlight-trial.png)
 
@@ -101,7 +134,7 @@ Run `final-dist/Afterlight/START HERE.cmd`. The protected build opens the Vapor 
 
 ![Afterlight gameplay](src/Exhibition-Deck/assets/screenshots/afterlight-gameplay.png)
 
-The presenter verifies hashes, refuses unknown builds, keeps a backup, and restores the original DLL byte-for-byte. It does not forge an ECDSA signature or modify a commercial game. See [the presenter guide](src/Afterlight/docs/Presenter-guide.md).
+The same checks are available in the optional presenter, which refuses unknown builds, keeps a backup, and restores the original DLL byte-for-byte. This is an original Afterlight-specific API replacement; it does not forge an ECDSA signature or modify a commercial game. See [the presenter guide](src/Afterlight/docs/Presenter-guide.md).
 
 ## Source map
 

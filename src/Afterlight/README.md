@@ -6,7 +6,7 @@ Double-click **START HERE.cmd** to open the Vapor game library.
 
 - **final-dist/Afterlight/App/** — generated portable Windows game and launcher. Keep the files together. Opening `Afterlight.exe` directly opens the launcher library; press Play there.
 - **Source/** — current Afterlight game and Vapor launcher, licensing service, and tests.
-- **docs/** — presenter guide included in source control. `App/` and `Demo/` are generated packages ignored by Git; build before launching a fresh clone.
+- **docs/** — presenter guide included in source control. `App/` and `Demo/` are generated packages; rebuild them when the source changes.
 
 The exhibition starts with an expired trial. Use the simulated checkout in the launcher, or run `final-dist/Afterlight/App/Presenter/DemoControl.exe owned` to enable play. Run the same tool with `expired` to reset the exhibit.
 

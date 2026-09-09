@@ -20,12 +20,13 @@ for name in paths:
         continue
     size = path.stat().st_size
     total += size
-    if size > 50 * 1024 * 1024:
-        problems.append((name, 'over 50 MiB; use a release asset'))
+    if size > 100 * 1024 * 1024:
+        problems.append((name, 'over GitHub’s 100 MiB file limit'))
     parts = set(path.relative_to(root).parts)
     if parts & {'.local-licensing', '.local-steam', 'seed-data', '.sdk-backup', '.local-archive', 'bin', 'obj', 'node_modules'} or path.name == 'licenses.json':
         problems.append((name, 'generated or private runtime file'))
-    if path.suffix.lower() in {'.pem', '.pfx', '.p12', '.key', '.exe', '.dll'}:
+    release_binary = path.relative_to(root).parts[:1] == ('final-dist',)
+    if path.suffix.lower() in {'.pem', '.pfx', '.p12', '.key', '.exe', '.dll'} and not release_binary:
         problems.append((name, 'credential or compiled binary'))
     if path.suffix.lower() in {'.cs', '.py', '.json', '.md', '.txt', '.ps1', '.mjs', '.pem', '.key', '.c'}:
         if private_key.search(path.read_bytes()):

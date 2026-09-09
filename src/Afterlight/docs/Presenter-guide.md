@@ -1,4 +1,4 @@
-# A two-minute SDK replacement demonstration
+# SDK replacement demonstration
 
 Open **OPEN DEMO.cmd** in the main folder. Everything runs offline.
 
@@ -10,6 +10,10 @@ Open **OPEN DEMO.cmd** in the main folder. Everything runs offline.
 Suggested narration: “The game asks a separate component whether play is allowed. We replaced that component with one that answers locally. The game executable did not change, and we did not create a valid signed license.”
 
 The account license is not altered by Apply or Restore. The expired-trial state remains in the service. Backups are stored in `final-dist/Afterlight/App/.sdk-backup/`. The tool rejects unknown game/SDK builds and damaged backups. Close the game and launcher before changing files.
+
+## Manual replacement
+
+The presenter automates a reversible file replacement. To demonstrate the same original project manually, close Vapor and Afterlight, build `Vapor.Emulator/Vapor.Emulator.csproj`, and copy its `Vaporworks.dll` into `final-dist/Afterlight/App/` only after saving the original as `.sdk-backup/Vaporworks.dll`. Compare SHA-256 hashes before and after the copy. Launch `Afterlight.exe` directly while the replacement is present. Restore the backup with the game and launcher closed, then compare its hash to the original backup. The root README contains copy-paste PowerShell commands for each step.
 
 This tool implements an original Afterlight-specific API replacement. It does not run SteamAutoCracker, Steamless, or any third-party emulator. It does not unpack executables or modify Steam games.
 

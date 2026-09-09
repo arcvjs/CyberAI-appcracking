@@ -13,15 +13,13 @@
 .DS_Store
 Thumbs.db
 
-# Portable packages are release artifacts, not source
+# Intermediate build outputs are not source
 /src/Afterlight/App/
 /src/Afterlight/Demo/
 /src/Prism/dist/
 /src/PatchMe/dist/
 /src/PatchMe/qa/
 /src/Exhibition-Deck/revision-build/
-/final-dist/*
-!/final-dist/README.md
 
 # Private runtime state and credentials (public trust keys remain in source)
 **/.local-licensing/

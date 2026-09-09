@@ -1,6 +1,6 @@
 # Final distributions
 
-This folder is generated locally and intentionally ignored by Git. Run:
+This folder contains the release packages built from `src/`. Rebuild them with:
 
 ```powershell
 pwsh -File ../src/scripts/Build.ps1
