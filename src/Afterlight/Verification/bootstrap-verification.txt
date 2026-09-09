@@ -1,3 +1,0 @@
-PASS Direct game launch exits successfully and opens the native launcher window.
-PASS Repeated direct launch reuses the same launcher process.
-PASS Library opens without automatically entering gameplay.

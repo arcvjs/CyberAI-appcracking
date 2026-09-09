@@ -1,6 +1,0 @@
-Native OpenGL window: OK
-UI states rendered: menu, arena, firing, reload, pause, settings, victory, defeat
-Render size: 1600x900
-Mean frame: 32.7 ms
-Lowest sampled FPS: 27.2
-Render frames: 245

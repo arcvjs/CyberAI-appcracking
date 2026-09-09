@@ -1,7 +1,0 @@
-PASS Apply, verified backup, and repeated Apply.
-PASS Restore blocked while game running.
-PASS Unchanged native game starts without launch context and survives a 20-second renewal.
-PASS Damaged backup rejected without changing active SDK.
-PASS Restore is byte-exact and repeatable.
-PASS Game assembly unchanged throughout demonstration.
-PASS Unknown SDK rejected.

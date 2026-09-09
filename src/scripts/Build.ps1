@@ -5,7 +5,7 @@ $distribution=Join-Path (Split-Path $repoRoot -Parent) 'final-dist'
 Push-Location $repoRoot
 try {
     if ($Project -in @('All','Prism')) {
-        & dotnet publish Prism/Desktop/Prism.csproj -c Release --artifacts-path Prism/artifacts/release -o (Join-Path $distribution 'Prism') --self-contained false
+        & dotnet publish Prism/Desktop/Prism.csproj -c Release --artifacts-path Prism/artifacts/release -o (Join-Path $distribution 'Prism') --self-contained false -p:DebugType=None -p:DebugSymbols=false
         if ($LASTEXITCODE -ne 0) { throw 'Prism publish failed' }
     }
     if ($Project -in @('All','Afterlight')) {

@@ -9,7 +9,7 @@ The repository is intentionally split into two top-level folders:
 | `src/` | Source code, tests, documentation, screenshots, and build scripts |
 | `final-dist/` | Local release packages produced from the source |
 
-`final-dist/` contains the current release packages so the demo can be run immediately. Build it again from source with the command below whenever the applications change.
+`final-dist/` contains the current release packages so the demo can be run immediately. See [Quick start](#quick-start) below for launch paths and build instructions.
 
 ## The four demos
 

@@ -13,7 +13,7 @@ The account license is not altered by Apply or Restore. The expired-trial state 
 
 ## Manual replacement
 
-The presenter automates a reversible file replacement. To demonstrate the same original project manually, close Vapor and Afterlight, build `Vapor.Emulator/Vapor.Emulator.csproj`, and copy its `Vaporworks.dll` into `final-dist/Afterlight/App/` only after saving the original as `.sdk-backup/Vaporworks.dll`. Compare SHA-256 hashes before and after the copy. Launch `Afterlight.exe` directly while the replacement is present. Restore the backup with the game and launcher closed, then compare its hash to the original backup. The root README contains copy-paste PowerShell commands for each step.
+The presenter automates a reversible file replacement. To demonstrate the same original project manually, close Vapor and Afterlight, build `Vapor.Emulator/Vapor.Emulator.csproj`, and copy its `Vaporworks.dll` into `final-dist/Afterlight/App/` only after saving the original as `.sdk-backup/Vaporworks.dll`. Compare SHA-256 hashes before and after the copy. Launch `Afterlight.exe` directly while the replacement is present. Restore the backup with the game and launcher closed, then compare its hash to the original backup. For a prebuilt replacement and File Explorer steps, see section 4 of the root README.
 
 This tool implements an original Afterlight-specific API replacement. It does not run SteamAutoCracker, Steamless, or any third-party emulator. It does not unpack executables or modify Steam games.
 
