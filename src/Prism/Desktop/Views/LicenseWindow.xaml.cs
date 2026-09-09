@@ -69,22 +69,23 @@ public partial class LicenseWindow : PrismDialog
             FeedbackText.Foreground=Brush(error?"#F0B8B8":"#C9BCDC");
         } else { GeneralFeedbackText.Text=message;GeneralFeedbackText.Foreground=Brush(error?"#F0B8B8":"#CBC0DB"); }
     }
-    private async Task Run(Func<Task> action,bool activation=false)
+    private async Task Run(Func<Task> action,bool activation=false,bool local=false)
     {
         if(IsBusy)return;
         bool form=activation&&ActivationForm.Visibility==Visibility.Visible;
         IsBusy=true;
         ActivateButton.IsEnabled=RefreshButton.IsEnabled=DeactivateButton.IsEnabled=DoneButton.IsEnabled=SecretKey.IsEnabled=VisibleKey.IsEnabled=RevealButton.IsEnabled=false;
-        ShowFeedback("Connecting to your licensing server…",false,form);
+        ShowFeedback(local?"Deleting the saved license…":"Connecting to your licensing server…",false,form);
         ActivateLabel.Text=activation?"Activating…":"Activate Prism";
         try {
             await action();
             SecretKey.Clear();VisibleKey.Clear();
             _alternative=false;
             FeedbackCard.Visibility=GeneralFeedback.Visibility=Visibility.Collapsed;
-            if(!_client.Status.CanEdit)ShowFeedback(_client.Status.Message,false,false);
+            if(local)ShowFeedback("Current license deleted from this device.",false,false);
+            else if(!_client.Status.CanEdit)ShowFeedback(_client.Status.Message,false,false);
         }
-        catch(Exception error)when(error is LicenseException or HttpRequestException or TaskCanceledException or IOException or System.ComponentModel.Win32Exception) {
+        catch(Exception error)when(error is LicenseException or HttpRequestException or TaskCanceledException or IOException or UnauthorizedAccessException or System.ComponentModel.Win32Exception) {
             ShowFeedback(error is HttpRequestException or TaskCanceledException?"Couldn't connect. Check your internet connection and that the licensing server is running, then try again.":error.Message,true,form);
         }
         finally {
@@ -100,7 +101,9 @@ public partial class LicenseWindow : PrismDialog
         await Run(()=>_client.ActivateAsync(key),true);
     }
     private async void Refresh_Click(object sender,RoutedEventArgs e)=>await Run(async()=>{await _client.CheckAsync(true);});
-    private async void Deactivate_Click(object sender,RoutedEventArgs e)=>await Run(()=>_client.DeactivateAsync());
+    private async void Deactivate_Click(object sender,RoutedEventArgs e)=>await Run(async()=>{
+        await _client.DeactivateAsync();
+    },local:true);
     private void Done_Click(object sender,RoutedEventArgs e)=>Close();
     private void AnotherKey_Click(object sender,RoutedEventArgs e){_alternative=true;Render();SecretKey.Focus();}
     private void Reveal_Click(object sender,RoutedEventArgs e)

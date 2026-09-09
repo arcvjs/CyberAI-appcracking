@@ -53,7 +53,8 @@
     <StackPanel Grid.Column="2" Margin="18,0,0,0"><TextBlock Text="OFFLINE ACCESS" FontSize="10" Foreground="#93889F" Margin="0,0,0,6"/><TextBlock x:Name="OfflineValue" Text="Up to 7 days" FontSize="13" Foreground="#E0D8E9"/></StackPanel>
    </Grid>
   </Border>
-  <StackPanel x:Name="ActiveActions" Orientation="Horizontal" Visibility="Collapsed" Margin="0,8,0,0"><Button Content="Use another key" Style="{StaticResource DialogLinkButton}" Click="AnotherKey_Click"/><Button x:Name="DeactivateButton" Content="Deactivate this device" Style="{StaticResource DialogLinkButton}" Click="Deactivate_Click"/></StackPanel>
+  <StackPanel x:Name="ActiveActions" Orientation="Horizontal" Visibility="Collapsed" Margin="0,8,0,0"><Button Content="Use another key" Style="{StaticResource DialogLinkButton}" Click="AnotherKey_Click"/></StackPanel>
+  <Button x:Name="DeactivateButton" Content="Delete current license" Style="{StaticResource DialogLinkButton}" HorizontalAlignment="Left" Margin="0,8,0,0" ToolTip="Remove the saved activation from this device. Your trial dates and documents stay unchanged." Click="Deactivate_Click"/>
   <Expander x:Name="ConnectionDetails" Header="Connection details" Style="{StaticResource DialogDisclosure}" Margin="0,9,0,0">
    <StackPanel><TextBlock Text="Licensing server" Foreground="#A397B1" FontSize="11" Margin="0,0,0,4"/><TextBlock x:Name="ServerLabel" FontFamily="Consolas" Foreground="#C8BDD7" FontSize="11" TextWrapping="Wrap"/><TextBlock Text="Device identifier" Foreground="#A397B1" FontSize="11" Margin="0,10,0,4"/><TextBlock x:Name="DeviceIdLabel" FontFamily="Consolas" Foreground="#B9ABC9" FontSize="11" TextWrapping="Wrap"/><TextBlock x:Name="LeaseLabel" Foreground="#B9ABC9" FontSize="11" TextWrapping="Wrap" Margin="0,9,0,0"/></StackPanel>
   </Expander>

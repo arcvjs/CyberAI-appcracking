@@ -18,6 +18,7 @@ public sealed class WindowsLicenseStore
 {
     private readonly string _path;
     public WindowsLicenseStore(string path)=>_path=path;
+    public void Delete()=>File.Delete(_path);
     public CachedActivation? Load()
     {
         if(!System.IO.File.Exists(_path))return null;

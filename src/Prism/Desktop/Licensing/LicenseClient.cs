@@ -98,7 +98,7 @@ public sealed class LicenseClient : IDisposable
     public async Task DeactivateAsync()
     {
         await _gate.WaitAsync();
-        try{_cache=new();_store.Save(_cache);Evaluate();}finally{_gate.Release();}
+        try{_store.Delete();_cache=null;_offline=false;_nextAttempt=default;Evaluate();}finally{_gate.Release();}
     }
     public void Dispose(){_http.Dispose();_gate.Dispose();}
 }
