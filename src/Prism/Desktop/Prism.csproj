@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Prism</AssemblyName>
+    <RootNamespace>Prism</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\prism.ico</ApplicationIcon>
+    <Version>0.2.1</Version>
+    <PrismTrustFile Condition="'$(PrismTrustFile)' == ''">Licensing\DevelopmentTrust.json</PrismTrustFile>
+    <Description>Prism — a focused native Windows image editor</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Prism.Licensing\Prism.Licensing.csproj"/>
+    <EmbeddedResource Include="$(PrismTrustFile)" LogicalName="Prism.LicenseTrust.json"/>
+    <Content Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
+    <Resource Include="Assets\prism.ico" />
+    <Content Include="..\server\license_server.py" Link="server\license_server.py" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\server\local_demo_server.py" Link="server\local_demo_server.py" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\server\README.md" Link="server\README.md" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

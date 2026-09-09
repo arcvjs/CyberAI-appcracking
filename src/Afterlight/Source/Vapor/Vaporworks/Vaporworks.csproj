@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Vaporworks</AssemblyName>
+    <RootNamespace>Vaporworks</RootNamespace>
+    <Version>1.0.0</Version>
+    <Description>Vaporworks — the Steamworks-equivalent SDK linked into the game.</Description>
+    <VaporTrustFile Condition="'$(VaporTrustFile)' == ''">DevelopmentTrust.json</VaporTrustFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vapor.Licensing\Vapor.Licensing.csproj"/>
+    <EmbeddedResource Include="$(VaporTrustFile)" LogicalName="Vaporworks.Trust.json"/>
+  </ItemGroup>
+</Project>

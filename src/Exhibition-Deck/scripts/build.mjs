@@ -1,0 +1,48 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {pathToFileURL, fileURLToPath} from 'node:url';
+import {Presentation,PresentationFile} from '@oai/artifact-tool';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const repoRoot=path.resolve(root,'..');
+const build=path.join(root,'revision-build');
+const finalOutput=path.join(repoRoot,'final-dist','Presentation');
+const skill=process.env.PRESENTATIONS_SKILL_DIR;
+if(!skill) throw new Error('Set PRESENTATIONS_SKILL_DIR to the presentation skill directory (see README.md).');
+await fs.mkdir(build,{recursive:true});
+await fs.mkdir(finalOutput,{recursive:true});
+const {finalizePresentation}=await import(pathToFileURL(path.join(skill,'container_tools/artifact_tool_utils.mjs')));
+const p=Presentation.create({slideSize:{width:1280,height:720}});
+const C={bg:'#F5F4EF',ink:'#192321',muted:'#596560',accent:'#286E60'};
+const files=['afterlight-trial','afterlight-sdk','afterlight-gameplay','folio-editor','folio-html','folio-branch','folio-ida','prism-trial','prism-editor','prism-local-server'];
+const bytes=await Promise.all(files.map(id=>fs.readFile(path.join(root,'assets','screenshots',id+'.png'))));
+function text(s,t,x,y,w,h,size=28,color=C.ink,bold=false){const z=s.shapes.add({geometry:'textbox',position:{left:x,top:y,width:w,height:h},fill:'none',line:{fill:'none',width:0}});z.text=t;z.text.style={typeface:'Arial',fontSize:size,bold,color,autoFit:'none'};return z;}
+function slide(title,tag,notes=''){const s=p.slides.add();s.background.fill=C.bg;text(s,tag,64,35,1120,32,17,C.accent,true);text(s,title,64,85,1150,100,46,C.ink,true);text(s,String(p.slides.items.length).padStart(2,'0'),1170,674,50,25,15,C.muted);s.speakerNotes.textFrame.setText(notes);return s;}
+function img(s,n,x,y,w,h){s.images.add({blob:bytes[n-1],contentType:'image/png',alt:'Screenshot pengguna: '+files[n-1],fit:'contain',position:{left:x,top:y,width:w,height:h}});}
+function note(s,t){text(s,t,64,621,1130,47,24,C.muted);}
+let s=slide('App Cracking','CIPHER ’26  /  SOFTWARE SECURITY','Demo hanya pada aplikasi buatan sendiri: Prism, Folio/PatchMe, Afterlight/Vapor. Tujuan: memahami batas kepercayaan dan bukti bypass, bukan aktivasi resmi.');
+text(s,'Bagaimana pemeriksaan lisensi\nbisa dilewati?',64,237,1100,155,54,C.ink,true);
+text(s,'4 metode · 3 aplikasi buatan sendiri',68,475,1080,60,30,C.accent);
+text(s,'Prism  /  Folio  /  Afterlight',68,549,1080,46,25,C.muted);
+s=slide('Empat titik yang bisa diubah','PETA DEMO','Urutan demo: konfigurasi trial, penggantian server, patch executable, lalu penggantian SDK. Jangan menyebut aktivasi resmi sebagai crack.');
+[['01','Tanggal trial','Prism · edit JSON'],['02','Jawaban server','Prism · localhost'],['03','Keputusan program','Folio · patch satu byte'],['04','Komponen pemeriksa','Afterlight · ganti SDK']].forEach((r,i)=>{const y=216+i*103;text(s,r[0],66,y,80,55,37,C.accent);text(s,r[1],168,y,580,52,33,C.ink,true);text(s,r[2],780,y+5,430,50,25,C.muted)});
+s=slide('Prism: akses editing','PRISM  /  SEBELUM DEMO','Screenshot pengguna #9 menunjukkan editor dan badge Free trial, bukan bukti trial sudah diperpanjang. Sumber: Prism/Desktop/MainWindow.Licensing.cs dan Models/EditorDocument.cs. Editing perlu izin; view, save, export tetap tersedia.');img(s,9,85,180,1110,416);note(s,'Trial aktif membuka editing. Dokumen tetap bisa disimpan saat izin berakhir.');
+s=slide('01  Ubah tanggal trial','PRISM  /  CONFIG TAMPERING','Sumber: Prism/Desktop/Licensing/TrialStore.cs. %LOCALAPPDATA%/Prism/Config/trial.json. Tanpa aktivasi tersimpan, expiresAtUtc dibaca setiap pemeriksaan; tanggal masa depan membuka editing. Menghapus file membuat trial 14 hari baru. Screenshot #8 adalah konfigurasi yang diberikan, bukan bukti hasil perubahan. Tampilkan perubahan tanggal dan editing saat live demo.');
+img(s,8,88,214,1104,240);text(s,'expiresAtUtc → tanggal masa depan',88,475,1090,60,34,C.accent,true);note(s,'Celah: tanggal lokal dipercaya tanpa tanda tangan.');
+s=slide('02  Ganti server lisensi','PRISM  /  SERVER EMULATION','Sumber: Prism/Desktop/Licensing/LicenseClient.cs dan server/local_demo_server.py. Edit %LOCALAPPDATA%/Prism/Config/licensing.json: serverUrl=http://127.0.0.1:47831, restart Prism, jalankan demo server dan aktivasi key nonempty. VPS strict menolak invalid key; demo mengganti otoritas yang dipercaya client, bukan meretas VPS. Respons tidak ditandatangani.');
+img(s,10,72,185,815,412);text(s,'localhost',923,227,290,50,31,C.accent,true);text(s,'valid: true',923,307,290,60,32,C.ink,true);text(s,'Client menerima\nizin dari server\npengganti.',923,397,285,140,27,C.muted);note(s,'VPS menolak key invalid. Server demo lokal menerima key apa pun yang tidak kosong.');
+s=slide('Folio: HTML gratis, RTF terkunci','FOLIO  /  FITUR PREMIUM','Screenshot pengguna #4 aplikasi Folio; #5 output HTML gratis. HTML bukan bukti premium berhasil dibypass. Gate can_export_pro hanya melindungi Word-compatible RTF. Sumber: PatchMe/src/patchme.c.');
+img(s,4,64,191,663,414);img(s,5,812,191,370,405);note(s,'Target bypass: ekspor Word (.rtf). HTML memang tersedia tanpa lisensi.');
+s=slide('03  Patch satu byte','FOLIO  /  BINARY PATCHING','Screenshot pengguna #7: IDA Patch Bytes. Build yang diverifikasi: VA 0x140001B80, file offset 0xF80, byte asli 75 16. Offset berubah antarbuild. Patch dilakukan pada salinan executable; restart salinan setelah menyimpan patch. Sumber: PatchMe/ORGANIZER.md, scripts/verify.py.');
+img(s,7,75,188,835,420);text(s,'75 → 74',949,252,285,80,46,C.accent,true);text(s,'JNE → JE',949,356,285,55,30,C.ink,true);text(s,'Kondisi izin\ndibalik.',949,444,260,95,27,C.muted);note(s,'Satu perubahan instruksi mengubah jalur ekspor.');
+s=slide('Buktinya: file RTF berhasil diekspor','FOLIO  /  HASIL YANG DICEK','Screenshot pengguna #6 menjelaskan inverse branch. 75→74 mengizinkan FREE tetapi menolak PRO; 75→EB selalu mengambil jalur allow. Badge FREE tidak berubah karena bukan enforcement. Verifier saat reanalisis lolos original/inverted gate dan converter/file I/O. Screenshot output yang diberikan adalah HTML, sehingga tidak dipresentasikan sebagai bukti RTF; tunjukkan ekspor RTF langsung di demo.');
+img(s,6,66,193,751,425);text(s,'FREE → boleh RTF',875,246,338,70,30,C.accent,true);text(s,'PRO → ditolak',875,344,338,65,30,C.ink,true);text(s,'Efek patch 75 → 74',875,448,338,64,23,C.muted);note(s,'Badge FREE boleh tetap sama. Uji hasil ekspor, bukan hanya tampilan.');
+s=slide('Afterlight: trial menghalangi bermain','AFTERLIGHT  /  SEBELUM DEMO','Screenshot pengguna #1: launcher dan trial ended. Ini keadaan protected. Presenter grant owned atau simulated checkout adalah aktivasi resmi, bukan bypass. Sumber: Afterlight/docs/Presenter-guide.md.');img(s,1,79,180,1122,427);note(s,'Game meminta izin melalui Vaporworks.dll.');
+s=slide('04  Ganti komponen pemeriksa','AFTERLIGHT  /  SDK REPLACEMENT','Screenshot pengguna #2: Vapor.Emulator/VaporAPI.cs. Replacement mengembalikan session Ok, License owned, MaxValue expiry; TicketStillValid hanya memeriksa Ok dan Ticket. RestartAppIfNecessary false. Presenter tool memverifikasi hash, membackup SDK dan mengganti App/Vaporworks.dll. Afterlight.dll tetap sama. Tidak memalsukan signature ECDSA.');img(s,2,72,185,806,421);text(s,'Vaporworks.dll',918,248,300,60,29,C.accent,true);text(s,'Selalu memberi\nstatus owned.',918,349,290,110,32,C.ink,true);note(s,'Yang diganti adalah verifier. Tidak ada signature baru yang dipalsukan.');
+s=slide('Game berjalan dengan SDK pengganti','AFTERLIGHT  /  SETELAH DEMO','Screenshot pengguna #3 gameplay. Lakukan live before/after untuk membuktikan hubungan dengan replacement. Catatan Afterlight/Verification/sdk-replacement-checks.txt: game assembly unchanged, launch tanpa context, bertahan melewati renewal 20 detik, restore byte-exact. Tutup game dan Vapor sebelum Apply atau Restore.');img(s,3,77,180,1126,423);note(s,'Executable game tetap sama. SDK dapat dikembalikan ke versi asli.');
+s=slide('Yang dipercaya menentukan celahnya','KESIMPULAN','Kesimpulan berlaku pada tiga aplikasi demo yang ditulis untuk exhibition. Jangan klaim semua software atau Steam memakai implementasi identik. Signatures protect authenticity only if the verification path is executed.');
+[['Tanggal lokal','Trial dapat diperpanjang'],['Server pilihan client','Jawaban izin dapat diganti'],['Cabang dalam executable','Keputusan dapat dibalik'],['SDK yang bisa diganti','Verifier dapat dilewati']].forEach((r,i)=>{let y=217+i*88;text(s,r[0],67,y,540,55,30,C.ink,true);text(s,r[1],668,y,546,55,28,C.accent)});
+text(s,'Kriptografi membantu selama pemeriksaannya tetap dijalankan.',67,609,1100,50,25,C.muted);
+const draft=path.join(build,'candidate.pptx');await(await PresentationFile.exportPptx(p)).save(draft);
+for(let i=0;i<p.slides.items.length;i++){const preview=await p.export({slide:p.slides.items[i],format:'png',scale:1});await fs.writeFile(path.join(build,`slide-${String(i+1).padStart(2,'0')}.png`),new Uint8Array(await preview.arrayBuffer()));}
+const final=path.join(finalOutput,'App-Cracking-12-Slides.pptx');
+const result=await finalizePresentation({workspaceDir:root,candidatePath:draft,finalPath:final,pythonExecutable:process.env.PYTHON_EXECUTABLE || 'python',integrityValidatorPath:path.join(skill,'container_tools/inspect_presentation_package_integrity.py'),layoutValidatorPath:path.join(skill,'container_tools/inspect_presentation_layout_geometry.py'),layoutArgs:['--expected-slide-size-emu','12192000,6858000','--validate-bullet-geometry','--validate-heading-fit'],explicitTotalSlideCount:12,fontPolicy:{basis:'design',families:['Arial']},verifyArtifactToolImport:true,receiptPath:path.join(build,'validation.json')});console.log(JSON.stringify(result));

@@ -1,0 +1,8 @@
+# Compiled application belongs in release downloads
+/dist/
+/qa/
+# ---> player patched copies / backups
+*-PATCHED*.exe
+*-patched*.exe
+*.bak
+*.orig

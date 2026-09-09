@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Vapor</AssemblyName>
+    <RootNamespace>Vapor.Client</RootNamespace>
+    <Version>1.0.0</Version>
+    <Description>Vapor — the Steam-style game client and launcher.</Description>
+    <VaporTrustFile Condition="'$(VaporTrustFile)' == ''">Licensing\DevelopmentTrust.json</VaporTrustFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vapor.Licensing\Vapor.Licensing.csproj"/>
+    <EmbeddedResource Include="$(VaporTrustFile)" LogicalName="Vapor.ClientTrust.json"/>
+    <Resource Include="Assets\courtyard.png" />
+  </ItemGroup>
+</Project>

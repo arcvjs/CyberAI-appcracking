@@ -1,0 +1,105 @@
+<Application x:Class="Vapor.Client.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             >    <Application.Resources>
+        <SolidColorBrush x:Key="SteamHeader" Color="#171D25"/>
+        <SolidColorBrush x:Key="SteamPageTop" Color="#1B2838"/>
+        <SolidColorBrush x:Key="SteamPageBottom" Color="#252830"/>
+        <SolidColorBrush x:Key="SteamPanel" Color="#223C50"/>
+        <SolidColorBrush x:Key="SteamPanelLight" Color="#2A475E"/>
+        <SolidColorBrush x:Key="SteamBlue" Color="#66C0F4"/>
+        <SolidColorBrush x:Key="SteamBlueDark" Color="#417A9B"/>
+        <SolidColorBrush x:Key="SteamText" Color="#C6D4DF"/>
+        <SolidColorBrush x:Key="SteamTextDim" Color="#8F98A0"/>
+        <SolidColorBrush x:Key="SteamGreen" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="SteamGreenDark" Color="#75A313"/>
+        <SolidColorBrush x:Key="SteamOrange" Color="#E35959"/>
+        <SolidColorBrush x:Key="SteamDialog" Color="#3D4450"/>
+        <SolidColorBrush x:Key="SteamDialogFrame" Color="#4C5567"/>
+
+        <Style x:Key="NavigationButton" TargetType="Button">
+            <Setter Property="Foreground" Value="#DCDEDF"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontSize" Value="23"/>
+            <Setter Property="FontFamily" Value="Segoe UI Semibold"/>
+            <Setter Property="Margin" Value="0,0,30,0"/>
+            <Setter Property="Padding" Value="0,3,0,7"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
+                <Border x:Name="Line" Background="Transparent" BorderBrush="Transparent" BorderThickness="0,0,0,3"><ContentPresenter Margin="{TemplateBinding Padding}"/></Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="Tag" Value="selected"><Setter Property="Foreground" Value="#1A9FFF"/><Setter TargetName="Line" Property="BorderBrush" Value="#1A9FFF"/></Trigger>
+                    <Trigger Property="IsMouseOver" Value="True"><Setter Property="Foreground" Value="White"/></Trigger>
+                    <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Line" Property="BorderBrush" Value="#66C0F4"/></Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate></Setter.Value></Setter>
+        </Style>
+        <Style x:Key="NavTab" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource SteamTextDim}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Margin" Value="0,0,18,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource SteamText}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource SteamGreenDark}"/>
+            <Setter Property="Foreground" Value="{StaticResource SteamGreen}"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontFamily" Value="Segoe UI Semibold"/>
+            <Setter Property="Padding" Value="22,10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#91C62D"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="#3E4A52"/>
+                                <Setter Property="Foreground" Value="#7C8A94"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SecondaryButton" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource SteamPanelLight}"/>
+            <Setter Property="Foreground" Value="{StaticResource SteamText}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3D6B8C"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="LinkText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource SteamBlue}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Application.Resources>
+</Application>
+

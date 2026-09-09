@@ -1,0 +1,16 @@
+<UserControl x:Class="Vapor.Client.Views.CommunityView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#1B2838" Offset="0"/>
+                <GradientStop Color="#16202D" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="COMMUNITY" FontFamily="Segoe UI Black" FontSize="24" Foreground="White" HorizontalAlignment="Center"/>
+            <TextBlock Text="Community is currently unavailable. Please try again later." FontSize="13" Foreground="{StaticResource SteamTextDim}" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

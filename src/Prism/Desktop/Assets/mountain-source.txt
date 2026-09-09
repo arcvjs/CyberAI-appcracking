@@ -1,0 +1,9 @@
+Photo: Lago di Carezza, Dolomites, Italy
+Photographer: Tobias Reich (@electerious)
+Source: https://unsplash.com/photos/a-mountain-range-with-a-lake-in-front-of-it-dH9QheuWtGw
+Download: https://images.unsplash.com/photo-1688019984360-50d40dfa955a?auto=format&fit=crop&crop=focalpoint&fp-x=0.5&fp-y=0.32&fm=jpg&q=90&w=3000&h=2000
+Asset: mountain.jpg (3000 x 2000 JPEG)
+License: Unsplash License https://unsplash.com/license
+Allows free download, copying, modification, distribution, and commercial/noncommercial use. Permission and attribution are not required; attribution is appreciated. Cannot sell the image without significant modification or compile images to replicate a competing service.
+Downloaded and visually inspected 2026-09-07. Landscape crop supplied by Unsplash image CDN from the original portrait photograph.
+Suggested credit: Photo by Tobias Reich on Unsplash.

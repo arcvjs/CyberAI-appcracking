@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>Afterlight</AssemblyName>
+    <RootNamespace>Afterlight</RootNamespace>
+    <Version>1.1.0</Version>
+    <Description>A small first-person arena shooter, protected by Vapor DRM.</Description>
+    <ApplicationIcon>Assets\afterlight.ico</ApplicationIcon>
+    <PublishSingleFile>false</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Raylib-cs" Version="8.0.0" />
+    <EmbeddedResource Include="Assets\icon.png" />
+    <EmbeddedResource Include="Assets\courtyard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vapor\Vaporworks\Vaporworks.csproj"/>
+  </ItemGroup>
+  <PropertyGroup Condition="'$(EnableDiagnostics)' == 'true'">
+    <DefineConstants>$(DefineConstants);INTERNAL_DIAGNOSTICS</DefineConstants>
+  </PropertyGroup>
+</Project>
+
+

@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Vapor.Licensing</AssemblyName>
+    <RootNamespace>Vapor.Licensing</RootNamespace>
+    <Version>1.0.0</Version>
+    <Description>Vapor — shared app-ticket protocol between the backend, the client, and the in-game SDK.</Description>
+  </PropertyGroup>
+</Project>
